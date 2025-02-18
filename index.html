@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trang vote</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap');
+        
+        body {
+            background: url('imagines/neon-miku.jpg') no-repeat center center fixed;
+            background-size: cover;
+            color: #0ff;
+            font-family: 'Orbitron', sans-serif;
+            text-align: center;
+            overflow-y: auto;
+            height: 100vh;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+        }
+        .side-container {
+            width: 15%;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.5);
+            box-shadow: 0 0 15px #0ff;
+            position: fixed;
+            top: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .left-container {
+            left: 0;
+        }
+        .right-container {
+            right: 0;
+        }
+        .right-container video {
+            width: 330%;
+            height: 100%;
+	    overflow: hidden;
+	    object-fit: cover;
+            border-radius: 10px;
+            box-shadow: 0 0 15px #0ff;
+        }
+        .vote-text {
+            writing-mode: vertical-rl;
+            text-orientation: upright;
+            font-size: 100px;
+            font-weight: bold;
+            text-shadow: 0 0 15px #0ff, 0 0 30px #0ff;
+            animation: colorChange 3s infinite alternate;
+        }
+        .main-content {
+            width: 70%;
+            margin: 0 auto;
+        }
+        h1 {
+            text-shadow: 0 0 15px #0ff, 0 0 30px #0ff;
+            font-size: 4em;
+            font-weight: bold;
+            animation: colorChange 3s infinite alternate;
+            padding: 10px;
+            border: 3px solid #0ff;
+            border-radius: 10px;
+            display: inline-block;
+            background: rgba(0, 0, 0, 0.7);
+            box-shadow: 0 0 20px #0ff;
+        }
+        @keyframes colorChange {
+            0% { color: #ff0000; }
+            50% { color: #00ff00; }
+            100% { color: #0000ff; }
+        }
+        .container {
+            margin: 50px auto;
+            width: 80%;
+            max-width: 800px;
+            padding: 20px;
+            border: 2px solid #0ff;
+            border-radius: 10px;
+            box-shadow: 0 0 20px #0ff;
+            background: rgba(0, 0, 0, 0.6);
+        }
+        .vote-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin: 20px 0;
+            padding: 15px;
+            border: 2px solid #0ff;
+            border-radius: 10px;
+            box-shadow: 0 0 15px #0ff;
+            background: rgba(0, 0, 0, 0.5);
+            gap: 20px;
+        }
+        .image-container {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+        }
+        .image-container img {
+            width: 120px;
+            height: 120px;
+            border-radius: 10px;
+            box-shadow: 0 0 15px #ff00ff;
+        }
+        .vote-name {
+            flex: 2;
+            text-align: center;
+            font-size: 20px;
+            font-weight: bold;
+            text-shadow: 0 0 10px #0ff;
+        }
+        .vote-button {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+        }
+        .button {
+            padding: 15px;
+            background: linear-gradient(90deg, #ff00ff, #00ffff);
+            color: #000;
+            border: none;
+            border-radius: 10px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+            text-shadow: 0 0 10px #000;
+            box-shadow: 0 0 20px #ff00ff;
+        }
+        .button:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 30px #ff00ff, 0 0 40px #00ffff;
+        }
+        #results {
+            margin-top: 20px;
+        }
+        .tree-chart {
+            text-align: left;
+            color: #0ff;
+            font-size: 18px;
+            text-shadow: 0 0 10px #0ff;
+        }
+        #total-votes {
+            font-size: 24px;
+            font-weight: bold;
+            text-shadow: 0 0 10px #ff0;
+            margin-top: 20px;
+        }
+    </style>
+    <script>
+        let votes = {};
+        let totalVotes = 0;
+        function vote(name) {
+            if (localStorage.getItem('hasVoted')) {
+                alert("Bạn chỉ có thể vote một lần!");
+                return;
+            }
+            localStorage.setItem('hasVoted', true);
+            if (!votes[name]) votes[name] = 0;
+            votes[name]++;
+            totalVotes++;
+            updateResults();
+        }
+     function updateResults() {
+            let resultsDiv = document.getElementById('results');
+            let totalVotesDiv = document.getElementById('total-votes');
+            resultsDiv.innerHTML = '<h2>Kết Quả Vote</h2>';
+            totalVotesDiv.innerHTML = `Tổng số lượt vote: ${totalVotes}`;
+            let tree = '<pre class="tree-chart">';
+            for (let key in votes) {
+                let percentage = ((votes[key] / totalVotes) * 100).toFixed(2);
+                tree += `${key} (${votes[key]}) - ${percentage}%\n`;
+                tree += ` ├── Votes: ${'█'.repeat(votes[key])}\n`;
+            }
+            tree += '</pre>';
+            resultsDiv.innerHTML += tree;
+        }
+    </script>
+    </style>
+
+</head>
+<body>
+    <div class="side-container left-container">
+        <div class="vote-text">VOTE</div>
+    </div>
+    <div class="main-content">
+        <h1>Vote Trang Web Đẹp Nhất</h1>
+        <div class="container">
+            <div class="vote-container">
+                <div class="image-container"><img src="imagines/Lê Đoàn Quốc Khánh.jpg" alt="Lê Đoàn Quốc Khánh"></div>
+                <div class="vote-name">Lê Đoàn Quốc Khánh</div>
+                <div class="vote-button"><button class="button" onclick="vote('Lê Đoàn Quốc Khánh')">Vote</button></div>
+            </div>
+            <div class="vote-container">
+                <div class="image-container"><img src="imagines/Ngô Hồng Phúc.jpg" alt="Ngô Hồng Phúc"></div>
+                <div class="vote-name">Ngô Hồng Phúc</div>
+                <div class="vote-button"><button class="button" onclick="vote('Ngô Hồng Phúc')">Vote</button></div>
+            </div>
+            <div class="vote-container">
+                <div class="image-container"><img src="imagines/Huỳnh Trường Giang.jpg" alt="Huỳnh Trường Giang"></div>
+                <div class="vote-name">Huỳnh Trường Giang</div>
+                <div class="vote-button"><button class="button" onclick="vote('Huỳnh Trường Giang')">Vote</button></div>
+            </div>
+            <div class="vote-container">
+                <div class="image-container"><img src="imagines/uh huh.jpg" alt="Nguyễn Hồng Hải"></div>
+                <div class="vote-name">Nguyễn Hồng Hải</div>
+                <div class="vote-button"><button class="button" onclick="vote('Nguyễn Hồng Hải')">Vote</button></div>
+            </div>
+            <div class="vote-container">
+                <div class="image-container"><img src="imagines/Đỗ Hà Minh Thái.jpg" alt="Đỗ Hà Minh Thái"></div>
+                <div class="vote-name">Đỗ Hà Minh Thái</div>
+                <div class="vote-button"><button class="button" onclick="vote('Đỗ Hà Minh Thái')">Vote</button></div>
+            </div>
+<div id="total-votes">Tổng số lượt vote: 0</div>
+        </div>
+        <div id="results" class="container"></div>
+    </div>
+        <div class="side-container right-container">
+        <video src="video/0218.mp4" autoplay loop muted></video>
+  </div>
+</body>
+</html>
